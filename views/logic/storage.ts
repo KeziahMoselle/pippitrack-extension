@@ -1,3 +1,4 @@
 import { useLocalStorage } from '@vueuse/core'
 
-export const storageDemo = useLocalStorage('webext-demo', 'Storage Demo', { listenToStorageChanges: true })
+export const osuApiKey = useLocalStorage('osu-api-key', '', { listenToStorageChanges: true })
+export const isKeyValid = useLocalStorage('is-key-valid', false, { listenToStorageChanges: true })

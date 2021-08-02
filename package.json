@@ -36,5 +36,9 @@
     "vue-global-api": "^0.2.4",
     "webext-bridge": "^3.1.4",
     "webextension-polyfill-ts": "^0.26.0"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "debounce": "^1.2.1"
   }
 }

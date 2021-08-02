@@ -1,9 +1,12 @@
-/* eslint-disable no-console */
-import { onMessage } from 'webext-bridge'
+const OSU_USER_ID_REGEX = /users\/(?<userId>\d*)/
 
-console.info('[vitesse-webext] Hello world from content script')
+const { userId } = window.document.location.pathname.match(OSU_USER_ID_REGEX)?.groups
 
-// communication example: send previous tab title from background page
-onMessage<any>('tab-prev', (e) => {
-  console.log(`[vitesse-webext] Navigate from page "${e.data.title}"`)
-})
+if (userId)
+  updatePlayer(userId)
+
+async function updatePlayer(id: string) {
+  const response = await fetch(`${id}`)
+  const data = await response.json()
+  console.log(data)
+}
