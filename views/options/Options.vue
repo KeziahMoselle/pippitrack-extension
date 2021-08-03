@@ -6,11 +6,11 @@
       Configure PippiTrack
     </p>
 
+    <button class="mt-8 bg-pink-700 text-white p-4 rounded-full" @click="login">
+      Login with osu!
+    </button>
     <div class="flex justify-center mt-6 mb-8">
-      <label class="flex justify-center items-center flex-col">
-        osu! API key {{ isKeyValid ? '✔️' : '❌' }}
-        <input v-model="osuApiKey" placeholder="osu! API key" class="border border-gray-400 rounded px-2 py-1 mt-2" @input="debounceCheckKey" />
-      </label>
+      {{ isKeyValid ? '✔️ Logged In' : '❌ Not Logged In' }}
     </div>
 
     <div class="mt-4">
@@ -21,21 +21,44 @@
 
 <script setup lang="ts">
 import { browser } from 'webextension-polyfill-ts'
-import debounce from 'debounce'
-import { osuApiKey, isKeyValid } from '~/logic/storage'
+import { isKeyValid } from '~/logic/storage'
 
-const debounceCheckKey = debounce(checkKey, 500)
+async function login() {
+  const url = new URL('https://osu.ppy.sh/oauth/authorize')
+  url.searchParams.append('client_id', '8763')
+  url.searchParams.append('redirect_uri', browser.identity.getRedirectURL('osu'))
+  url.searchParams.append('response_type', 'code')
+  url.searchParams.append('scope', 'public')
 
-async function checkKey(event: FocusEvent) {
-  const target = event.target as HTMLInputElement
-  const isValid = await browser.runtime.sendMessage({
-    message: 'update_osu_api_key',
-    data: target.value,
-  })
+  try {
+    const redirectUrl = await browser.identity.launchWebAuthFlow({
+      url: url.href,
+      interactive: true,
+    })
 
-  if (isValid)
+    const code = new URL(redirectUrl).searchParams.get('code')
+
+    const response = await fetch('http://127.0.0.1:3000/api/get_token', {
+      method: 'POST',
+      body: code,
+    })
+
+    const token = await response.json()
+
     isKeyValid.value = true
-  else
+
+    browser.runtime.sendMessage({
+      message: 'save_tokens',
+      data: {
+        access_token: token.access_token,
+        refresh_token: token.refresh_token,
+        expires_in: token.expires_in,
+      },
+    })
+  }
+  catch (error) {
+    console.error(error)
     isKeyValid.value = false
+  }
 }
 </script>

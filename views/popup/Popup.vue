@@ -3,13 +3,13 @@
     <Logo />
     <div>PippiTrack</div>
     <p class="mt-2 opacity-50">
-      {{ isKeyValid ? '' : 'You need to setup your osu! API key' }}
+      {{ isKeyValid ? '' : 'Please log in via osu!' }}
     </p>
     <button class="btn mt-2" @click="openOptionsPage">
       Open Options
     </button>
     <div class="mt-2">
-      <span class="opacity-50">osu! API key:</span> {{ isKeyValid ? '✔️' : '❌' }}
+      <span class="opacity-50">Logged in:</span> {{ isKeyValid ? '✔️' : '❌' }}
     </div>
   </main>
 </template>
