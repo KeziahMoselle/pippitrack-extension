@@ -1,5 +1,15 @@
 <template>
-  <a class="icon-btn mx-2 text-2xl" rel="noreferrer" href="https://github.com/antfu/vitesse-webext" target="_blank" title="GitHub">
-    <pixelarticons-power />
-  </a>
+  <img :src="src" alt="Logo" />
 </template>
+
+<script>
+const src = '/public/icon-512.png'
+
+export default {
+  setup() {
+    return {
+      src,
+    }
+  },
+}
+</script>
