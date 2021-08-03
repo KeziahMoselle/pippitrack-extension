@@ -1,7 +1,15 @@
+import { sendMessage } from 'webext-bridge'
 import { browser } from 'webextension-polyfill-ts'
 
 browser.runtime.onInstalled.addListener((): void => {
   browser.runtime.openOptionsPage()
+})
+
+browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  if (changeInfo.url) {
+    console.log(changeInfo.url)
+    sendMessage('on-url-change', { title: tab.title }, { context: 'content-script', tabId })
+  }
 })
 
 browser.runtime.onMessage.addListener(async(message) => {
