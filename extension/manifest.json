@@ -35,7 +35,6 @@
     "identity",
     "storage",
     "activeTab",
-    "notifications",
     "http://osu.ppy.sh/*",
     "https://osu.ppy.sh/*"
   ],
