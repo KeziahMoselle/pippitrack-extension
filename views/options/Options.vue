@@ -44,7 +44,7 @@ async function login() {
 
     const code = new URL(redirectUrl).searchParams.get('code')
 
-    const response = await fetch('http://127.0.0.1:3000/api/get_token', {
+    const response = await fetch('https://pippitrack.keziahmoselle.fr/api/get_token', {
       method: 'POST',
       body: code,
     })
