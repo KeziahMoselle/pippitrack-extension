@@ -6,10 +6,8 @@ browser.runtime.onInstalled.addListener((): void => {
 })
 
 browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (changeInfo.url) {
-    console.log(changeInfo.url)
+  if (changeInfo.url)
     sendMessage('on-url-change', { title: tab.title }, { context: 'content-script', tabId })
-  }
 })
 
 browser.runtime.onMessage.addListener(async(message) => {
@@ -18,6 +16,9 @@ browser.runtime.onMessage.addListener(async(message) => {
       const { userId } = message.data
 
       const { access_token } = await refreshToken()
+
+      if (!access_token)
+        return
 
       try {
         await fetch(`https://pippitrack.keziahmoselle.fr/api/user_tracked?osu_id=${userId}`)
@@ -41,7 +42,6 @@ browser.runtime.onMessage.addListener(async(message) => {
 
     if (message.message === 'save_tokens') {
       const token = message.data
-
       await browser.storage.sync.set({
         access_token: token.access_token,
         refresh_token: token.refresh_token,
@@ -55,35 +55,40 @@ browser.runtime.onMessage.addListener(async(message) => {
 })
 
 interface Token {
-  access_token: string
+  access_token?: string
 }
 
 async function refreshToken(): Promise<Token> {
-  const { access_token, refresh_token, expires_in } = await browser.storage.sync.get()
+  try {
+    const { access_token, refresh_token, expires_in } = await browser.storage.sync.get()
 
-  const expiresAt = new Date(expires_in)
+    const expiresAt = new Date(expires_in)
 
-  if (
-    (expiresAt && new Date() > expiresAt)
-    || !expiresAt
-  ) {
-    const newToken = await fetch('https://pippitrack.keziahmoselle.fr/api/get_token?grant_type=refresh_token', {
-      method: 'POST',
-      body: refresh_token,
-    }).then(res => res.json())
+    if (
+      (expiresAt && new Date() > expiresAt)
+      || !expiresAt
+    ) {
+      const newToken = await fetch('https://pippitrack.keziahmoselle.fr/api/get_token?grant_type=refresh_token', {
+        method: 'POST',
+        body: refresh_token,
+      }).then(res => res.json())
 
-    await browser.storage.sync.set({
-      access_token: newToken.access_token,
-      refresh_token: newToken.refresh_token,
-      expires_in: new Date(Date.now() + newToken.expires_in * 1000).toISOString(),
-    })
+      await browser.storage.sync.set({
+        access_token: newToken.access_token,
+        refresh_token: newToken.refresh_token,
+        expires_in: new Date(Date.now() + newToken.expires_in * 1000).toISOString(),
+      })
+
+      return {
+        access_token: newToken.access_token,
+      }
+    }
 
     return {
-      access_token: newToken.access_token,
+      access_token,
     }
   }
-
-  return {
-    access_token,
+  catch {
+    return {}
   }
 }

@@ -1,7 +1,6 @@
 <template>
-  <main class="w-[300px] px-4 py-5 text-center text-white flex justify-between">
+  <main class="w-[350px] px-4 py-5 text-center text-white flex justify-between">
     <div class="background"></div>
-
     <div class="w-16">
       <Logo />
     </div>
@@ -17,13 +16,19 @@
       </p>
 
       <div class="mt-2">
-        <div v-if="isKeyValid" class="inline-flex items-center px-3 py-1 rounded-full bg-white text-black" @click="openOptionsPage">
+        <div v-if="isKeyValid" class="inline-flex items-center px-3 py-1 rounded-full bg-white text-black">
           <Status /> Watching top plays...
         </div>
 
         <button v-if="!isKeyValid" class="btn bg-pink-700" @click="login">
           Log in with osu!
         </button>
+      </div>
+    </div>
+
+    <div>
+      <div v-if="isKeyValid" class="px-3 py-1 rounded-full bg-white text-black hover:bg-gray-200 transition-colors cursor-pointer" @click="openOptionsPage">
+        <pixelarticons-sliders />
       </div>
     </div>
   </main>

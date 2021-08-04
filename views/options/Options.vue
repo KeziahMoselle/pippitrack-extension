@@ -6,15 +6,21 @@
       Configure PippiTrack
     </p>
 
-    <button class="mt-8 bg-pink-700 text-white p-4 rounded-full" @click="login">
-      Login with osu!
-    </button>
     <div class="flex justify-center mt-6 mb-8">
-      {{ isKeyValid ? '✔️ Logged In' : '❌ Not Logged In' }}
+      {{ isKeyValid ? '✔️ PippiTrack is working' : '❌ PippiTrack is deactivated' }}
     </div>
 
+    <button v-if="!isKeyValid" class="bg-pink-700 text-white p-4 rounded-full" @click="login">
+      Login with osu!
+    </button>
+
+    <button v-if="isKeyValid" class="bg-red-500 text-white p-4 rounded-full" @click="logout">
+      Logout from osu!
+    </button>
+
     <div class="mt-4">
-      Powered by Vite <pixelarticons-zap class="align-middle" />
+      <a href="https://github.com/KeziahMoselle/pippi-track">PippiTrack Source</a>
+      <a href="https://github.com/KeziahMoselle/pippitrack-extension">PippiTrack Extension Source</a>
     </div>
   </main>
 </template>
@@ -60,5 +66,17 @@ async function login() {
     console.error(error)
     isKeyValid.value = false
   }
+}
+
+async function logout() {
+  browser.runtime.sendMessage({
+    message: 'save_tokens',
+    data: {
+      access_token: undefined,
+      refresh_token: undefined,
+      expires_in: 0,
+    },
+  })
+  isKeyValid.value = false
 }
 </script>
