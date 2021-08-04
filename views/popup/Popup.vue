@@ -38,15 +38,13 @@
 import { browser } from 'webextension-polyfill-ts'
 import { isKeyValid } from '~/logic/storage'
 
-const OSU_CLIENT_ID = String(import.meta.env.VITE_OSU_CLIENT_ID)
-
 function openOptionsPage() {
   browser.runtime.openOptionsPage()
 }
 
 async function login() {
   const url = new URL('https://osu.ppy.sh/oauth/authorize')
-  url.searchParams.append('client_id', OSU_CLIENT_ID)
+  url.searchParams.append('client_id', '8497')
   url.searchParams.append('redirect_uri', browser.identity.getRedirectURL('osu'))
   url.searchParams.append('response_type', 'code')
   url.searchParams.append('scope', 'public')
