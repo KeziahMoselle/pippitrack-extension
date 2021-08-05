@@ -21,7 +21,7 @@ browser.runtime.onMessage.addListener(async(message) => {
         return
 
       try {
-        await fetch(`https://pippitrack.keziahmoselle.fr/api/user_tracked?osu_id=${userId}`)
+        await fetch(`https://api.pippitrack.com/v1/user_tracked?osu_id=${userId}`)
       }
       catch {
         return
@@ -34,7 +34,7 @@ browser.runtime.onMessage.addListener(async(message) => {
         },
       }).then(res => res.json())
 
-      await fetch('https://pippitrack.keziahmoselle.fr/api/top_plays', {
+      await fetch('https://api.pippitrack.com/v1/top_plays', {
         method: 'POST',
         body: JSON.stringify(newScores),
       }).then(res => res.json())
@@ -68,7 +68,7 @@ async function refreshToken(): Promise<Token> {
       (expiresAt && new Date() > expiresAt)
       || !expiresAt
     ) {
-      const newToken = await fetch('https://pippitrack.keziahmoselle.fr/api/get_token?grant_type=refresh_token', {
+      const newToken = await fetch('https://api.pippitrack.com/v1/get_token?grant_type=refresh_token', {
         method: 'POST',
         body: refresh_token,
       }).then(res => res.json())
