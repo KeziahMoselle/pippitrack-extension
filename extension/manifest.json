@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "PippiTrack",
   "description": "Allows you to send new top plays to Discord near instantly.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "browser_action": {
     "default_icon": "./public/icon-512.png",
     "default_popup": "./dist/popup/index.html"
@@ -34,7 +34,6 @@
     "tabs",
     "identity",
     "storage",
-    "activeTab",
     "http://osu.ppy.sh/*",
     "https://osu.ppy.sh/*"
   ],
