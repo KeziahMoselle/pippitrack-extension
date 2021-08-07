@@ -37,48 +37,10 @@
 <script setup lang="ts">
 import { browser } from 'webextension-polyfill-ts'
 import { isKeyValid } from '~/logic/storage'
+import { login } from '~/logic/oauth'
 
 function openOptionsPage() {
   browser.runtime.openOptionsPage()
-}
-
-async function login() {
-  const url = new URL('https://osu.ppy.sh/oauth/authorize')
-  url.searchParams.append('client_id', '8497')
-  url.searchParams.append('redirect_uri', browser.identity.getRedirectURL('osu'))
-  url.searchParams.append('response_type', 'code')
-  url.searchParams.append('scope', 'public')
-
-  try {
-    const redirectUrl = await browser.identity.launchWebAuthFlow({
-      url: url.href,
-      interactive: true,
-    })
-
-    const code = new URL(redirectUrl).searchParams.get('code')
-
-    const response = await fetch('https://api.pippitrack.com/v1/get_token', {
-      method: 'POST',
-      body: code,
-    })
-
-    const token = await response.json()
-
-    isKeyValid.value = true
-
-    browser.runtime.sendMessage({
-      message: 'save_tokens',
-      data: {
-        access_token: token.access_token,
-        refresh_token: token.refresh_token,
-        expires_in: token.expires_in,
-      },
-    })
-  }
-  catch (error) {
-    console.error(error)
-    isKeyValid.value = false
-  }
 }
 </script>
 

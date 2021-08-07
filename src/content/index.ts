@@ -21,12 +21,12 @@ async function sendTopPlays() {
 
   const { userId } = groups
 
-  if (userId) {
-    browser.runtime.sendMessage({
-      message: 'send_top_plays',
-      data: {
-        userId,
-      },
-    })
-  }
+  if (!userId) return
+
+  browser.runtime.sendMessage({
+    message: 'send_top_plays',
+    data: {
+      userId,
+    },
+  })
 }

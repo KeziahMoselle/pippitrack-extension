@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
   "name": "PippiTrack",
-  "description": "Allows you to send new top plays to Discord near instantly.",
-  "version": "1.0.1",
+  "version": "1.1.0",
+  "description": "Allows you to send new top plays to Discord when visiting osu! profiles",
   "browser_action": {
     "default_icon": "./public/icon-512.png",
     "default_popup": "./dist/popup/index.html"
@@ -13,18 +13,22 @@
     "chrome_style": false
   },
   "background": {
-    "scripts": ["./dist/background/index.global.js"],
+    "scripts": [
+      "./dist/background/index.global.js"
+    ],
     "persistent": false
   },
-  "content_scripts": [{
-    "matches": [
-      "http://osu.ppy.sh/users/*",
-      "https://osu.ppy.sh/users/*"
-    ],
-    "js": [
-      "./dist/content/index.global.js"
-    ]
-  }],
+  "content_scripts": [
+    {
+      "matches": [
+        "http://osu.ppy.sh/users/*",
+        "https://osu.ppy.sh/users/*"
+      ],
+      "js": [
+        "./dist/content/index.global.js"
+      ]
+    }
+  ],
   "icons": {
     "16": "./public/icon-512.png",
     "48": "./public/icon-512.png",
@@ -36,6 +40,5 @@
     "storage",
     "http://osu.ppy.sh/*",
     "https://osu.ppy.sh/*"
-  ],
-  "content_security_policy": "script-src 'self' http://localhost:3303; object-src 'self'"
+  ]
 }

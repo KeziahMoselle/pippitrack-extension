@@ -18,7 +18,7 @@
       Logout from osu!
     </button>
 
-    <div class="mt-4">
+    <div class="flex flex-col gap-2 mt-8">
       <a href="https://github.com/KeziahMoselle/pippi-track">PippiTrack Source</a>
       <a href="https://github.com/KeziahMoselle/pippitrack-extension">PippiTrack Extension Source</a>
     </div>
@@ -26,58 +26,6 @@
 </template>
 
 <script setup lang="ts">
-import { browser } from 'webextension-polyfill-ts'
+import { login, logout } from '~/logic/oauth'
 import { isKeyValid } from '~/logic/storage'
-const redirectUri = browser.identity.getRedirectURL('osu')
-
-async function login() {
-  const url = new URL('https://osu.ppy.sh/oauth/authorize')
-  url.searchParams.append('client_id', '8497')
-  url.searchParams.append('redirect_uri', redirectUri)
-  url.searchParams.append('response_type', 'code')
-  url.searchParams.append('scope', 'public')
-
-  try {
-    const redirectUrl = await browser.identity.launchWebAuthFlow({
-      url: url.href,
-      interactive: true,
-    })
-
-    const code = new URL(redirectUrl).searchParams.get('code')
-
-    const response = await fetch('https://api.pippitrack.com/v1/get_token', {
-      method: 'POST',
-      body: code,
-    })
-
-    const token = await response.json()
-
-    isKeyValid.value = true
-
-    browser.runtime.sendMessage({
-      message: 'save_tokens',
-      data: {
-        access_token: token.access_token,
-        refresh_token: token.refresh_token,
-        expires_in: token.expires_in,
-      },
-    })
-  }
-  catch (error) {
-    console.error(error)
-    isKeyValid.value = false
-  }
-}
-
-async function logout() {
-  browser.runtime.sendMessage({
-    message: 'save_tokens',
-    data: {
-      access_token: undefined,
-      refresh_token: undefined,
-      expires_in: 0,
-    },
-  })
-  isKeyValid.value = false
-}
 </script>
