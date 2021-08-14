@@ -18,8 +18,8 @@
   },
   "content_scripts": [{
     "matches": [
-      "http://osu.ppy.sh/*",
-      "https://osu.ppy.sh/*"
+      "http://osu.ppy.sh/users/*",
+      "https://osu.ppy.sh/users/*"
     ],
     "js": [
       "./dist/content/index.global.js"
